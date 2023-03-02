@@ -67,7 +67,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "read_monitoring"
             ]
           }
@@ -125,7 +125,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "write_monitoring"
             ]
           }
@@ -171,7 +171,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "write_monitoring"
             ]
           }
@@ -235,7 +235,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "read_monitoring"
             ]
           }
@@ -276,7 +276,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "write_monitoring"
             ]
           }
@@ -325,7 +325,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "read_monitoring"
             ]
           }
@@ -372,7 +372,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "write_monitoring"
             ]
           }
@@ -397,7 +397,7 @@
           }
         ],
         "responses": {
-          "202": {
+          "200": {
             "$ref": "#/components/responses/DeleteResponse"
           },
           "401": {
@@ -412,7 +412,7 @@
         },
         "security": [
           {
-            "0Auth2": [
+            "OAuth2": [
               "write_monitoring"
             ]
           }
@@ -536,7 +536,7 @@
       }
     },
     "securitySchemes": {
-      "0Auth2": {
+      "OAuth2": {
         "type": "oauth2",
         "flows": {
           "password": {

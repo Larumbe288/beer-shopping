@@ -10,7 +10,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]
 #RewriteRule ^(.*)$ %{ENV:BASE}index.php [QSA,L]
-
+Access-Control-Allow-Origin: localhost:8888
 Header add Access-Control-Allow-Origin "*"
 Header add Access-Control-Allow-Headers "Authorization"
 Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
