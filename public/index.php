@@ -1,19 +1,22 @@
 <?php
 
-use Controllers\WelcomeController;
-use Slim\Factory\AppFactory;
-use Slim\Psr7\Request;
-use Slim\Psr7\Response;
+use Ngcs\Slim\CustomSlimApp;
 
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_STRICT);
+ini_set("display_errors", 0);
+
+// return OK for every options call, this only needed when called from angular
+if (isset($_SERVER['HTTP_ORIGIN']) && (strtolower($_SERVER['REQUEST_METHOD']) == "options")) {
+    header("HTTP/1.1 200 OK");
+    exit(0);
+}
+// load slim library
 require __DIR__ . '/../vendor/autoload.php';
-require "../src/Controllers/WelcomeController.php";
-$app = AppFactory::create();
-$app->addRoutingMiddleware();
-$errorMiddleware = $app->addErrorMiddleware(true, true, true);
-$welcomeController = new WelcomeController();
-$r = $welcomeController();
-$app->get("/welcome", function (Response $response, Request $request) {
-    $response->getBody()->write("Hello, world");
-    return $response;
-});
+
+// Run app
+
+/** @var CustomSlimApp $app */
+$app = require __DIR__ . '/../BackEnd/src/Slim/slim_setup.php';
+// Run app
 $app->run();
+exit;

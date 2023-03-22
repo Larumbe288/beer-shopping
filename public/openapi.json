@@ -143,7 +143,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Users"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "name"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "example@example.es"
+                  }
+                }
               }
             }
           }
@@ -215,9 +226,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Category"
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Category"
+                      }
+                    }
                   }
                 }
               }
@@ -436,19 +451,29 @@
             "type": "integer",
             "format": "int32"
           },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "example@example.es"
+          "properties": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "example@example.es"
+              },
+              "password": {
+                "type": "string",
+                "format": "password",
+                "example": "Asdf1234"
+              },
+              "role": {
+                "type": "string",
+                "example": "admin"
+              }
+            }
           },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "example": "Asdf1234"
-          },
-          "role": {
-            "type": "string",
-            "example": "admin"
+          "related_entities": {
+            "type": "object",
+            "properties": {
+            }
           }
         }
       },
@@ -460,19 +485,28 @@
             "format": "int32",
             "example": 1
           },
-          "name": {
-            "type": "string",
-            "example": "Charles V"
+          "properties": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Charles V"
+              },
+              "description": {
+                "type": "string",
+                "example": "Brewed beers are the best ones"
+              },
+              "idCat": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true,
+                "example": null
+              }
+            }
           },
-          "description": {
-            "type": "string",
-            "example": "Brewed beers are the best ones"
-          },
-          "idCat": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true,
-            "example": null
+          "related_entities": {
+            "type": "object",
+            "properties": {}
           }
         }
       }

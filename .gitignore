@@ -49,7 +49,6 @@ tags
 
 ### composer ###
 composer.phar
-/vendor/
 
 ### env build file ###
 .env.local
