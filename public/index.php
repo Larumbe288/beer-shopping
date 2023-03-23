@@ -1,22 +1,15 @@
 <?php
 
-use Ngcs\Slim\CustomSlimApp;
 
-error_reporting(E_ALL ^ E_DEPRECATED ^ E_STRICT);
-ini_set("display_errors", 0);
+use DI\Container;
+use Slim\Factory\AppFactory;
 
-// return OK for every options call, this only needed when called from angular
-if (isset($_SERVER['HTTP_ORIGIN']) && (strtolower($_SERVER['REQUEST_METHOD']) == "options")) {
-    header("HTTP/1.1 200 OK");
-    exit(0);
-}
-// load slim library
 require __DIR__ . '/../vendor/autoload.php';
+$container = new Container();
 
-// Run app
+AppFactory::setContainer($container);
+$app = AppFactory::create();
 
-/** @var CustomSlimApp $app */
-$app = require __DIR__ . '/../BackEnd/src/Slim/slim_setup.php';
-// Run app
-$app->run();
-exit;
+
+
+

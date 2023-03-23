@@ -8,6 +8,9 @@ use BeerApi\Shopping\Categories\Infrastucture\Repositories\InMemoryCategoryRepos
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
+/**
+ *
+ */
 class CategoriesProvider implements ServiceProviderInterface
 {
 

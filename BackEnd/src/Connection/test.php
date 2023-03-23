@@ -13,11 +13,10 @@ try {
     $creator = new CategoryCreator($repository);
     $id = $creator($cat->getCategoryName(), $cat->getCategoryDescription());
     $memory = $repository->findAll();
-    for ($i = 0; $i < count($memory); $i++) {
-        foreach ($memory[$i] as $key => $value) {
-            echo $key . " " . $value;
-        }
+    foreach ($memory as $key => $value) {
+        echo $key . " " . $value->getCategoryName()->getValue();
     }
+
 } catch (Exception $e) {
     exit(255);
 }

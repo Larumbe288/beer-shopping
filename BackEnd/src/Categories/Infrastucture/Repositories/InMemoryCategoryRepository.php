@@ -9,6 +9,7 @@ use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
 
 class InMemoryCategoryRepository implements CategoryRepository
 {
+    /** @var Category[] */
     private array $memory;
 
     public function __construct(array $memory)
@@ -18,7 +19,7 @@ class InMemoryCategoryRepository implements CategoryRepository
 
     public function insert(Category $category)
     {
-        $this->memory = $this->array_push_assoc($this->memory, $category->getCategoryId(), $category);
+        $this->memory = $this->array_push_assoc($this->memory, $category->getCategoryId()->getValue(), $category);
     }
 
     public function update(Category $category)
@@ -43,7 +44,7 @@ class InMemoryCategoryRepository implements CategoryRepository
 
     private function checkName(CategoryName $name)
     {
-        for ($i = 0; $i < count($this->memory); $i++) {
+        foreach ($this->memory as $key => $value) {
 
         }
     }
