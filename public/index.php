@@ -6,9 +6,10 @@ use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 $container = new Container();
+$app = AppFactory::createFromContainer($container);
 
-AppFactory::setContainer($container);
-$app = AppFactory::create();
+
+$app->run();
 
 
 
