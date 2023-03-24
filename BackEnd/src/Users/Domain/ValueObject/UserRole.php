@@ -15,4 +15,9 @@ class UserRole
         }
         $this->role = $role;
     }
+
+    public function getValue()
+    {
+        return $this->role;
+    }
 }

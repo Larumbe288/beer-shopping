@@ -6,6 +6,7 @@ use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryDescription;
 use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
 use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
 use Exception;
+use InvalidArgumentException;
 
 /**
  *
@@ -15,15 +16,17 @@ class Category
     private CategoryId $categoryId;
     private CategoryName $categoryName;
     private CategoryDescription $categoryDescription;
-    private CategoryId $subId;
+    private CategoryId|null $subId;
 
-    public function __construct(CategoryId $categoryId, CategoryName $categoryName, CategoryDescription $categoryDescription, CategoryId $subCategoryId = null)
+    public function __construct(CategoryId $categoryId, CategoryName $categoryName, CategoryDescription $categoryDescription, CategoryId|null $subCategoryId = null)
     {
         $this->categoryId = $categoryId;
         $this->categoryName = $categoryName;
         $this->categoryDescription = $categoryDescription;
         if ($subCategoryId !== null) {
             $this->subId = $subCategoryId;
+        } else {
+            $this->subId = null;
         }
     }
 
@@ -57,9 +60,9 @@ class Category
     }
 
     /**
-     * @return CategoryId
+     * @return CategoryId|null
      */
-    public function getSubId(): CategoryId
+    public function getSubId(): CategoryId|null
     {
         return $this->subId;
     }
@@ -74,8 +77,30 @@ class Category
         return CategoryId::generate();
     }
 
-    public function update()
+    public function update(CategoryName $name, CategoryDescription $description, CategoryId $subId = null): Category
     {
+        $this->categoryName = $name;
+        $this->categoryDescription = $description;
+        if (!is_null($subId)) {
+            $this->subId = $subId;
+        }
+        return $this;
+    }
 
+    public function delete(): void
+    {
+        if ($this->hasProducts() || $this->isParentCategory()) {
+            throw new InvalidArgumentException();
+        }
+    }
+
+    private function hasProducts(): bool
+    {
+        return false;
+    }
+
+    private function isParentCategory(): bool
+    {
+        return false;
     }
 }

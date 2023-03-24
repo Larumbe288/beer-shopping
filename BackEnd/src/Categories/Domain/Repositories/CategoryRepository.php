@@ -14,10 +14,10 @@ interface CategoryRepository
 
     public function update(Category $category);
 
-    public function findById(CategoryId $categoryId);
+    public function findById(CategoryId $categoryId): Category;
 
     public function delete(CategoryId $categoryId);
 
-    public function findAll();
+    public function findAll(string $field, int $prev_offset, int $next_offset);
 
 }

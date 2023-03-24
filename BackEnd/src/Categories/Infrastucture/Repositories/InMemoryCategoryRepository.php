@@ -3,10 +3,15 @@
 namespace BeerApi\Shopping\Categories\Infrastucture\Repositories;
 
 use BeerApi\Shopping\Categories\Domain\Category;
+use BeerApi\Shopping\Categories\Domain\Exceptions\CategoryAlreadyExists;
+use BeerApi\Shopping\Categories\Domain\Exceptions\CategoryNotFound;
 use BeerApi\Shopping\Categories\Domain\Repositories\CategoryRepository;
 use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
 use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
 
+/**
+ *
+ */
 class InMemoryCategoryRepository implements CategoryRepository
 {
     /** @var Category[] */
@@ -17,35 +22,68 @@ class InMemoryCategoryRepository implements CategoryRepository
         $this->memory = $memory;
     }
 
+    /**
+     * @throws CategoryAlreadyExists
+     */
     public function insert(Category $category)
     {
+        $this->checkName($category->getCategoryName());
         $this->memory = $this->array_push_assoc($this->memory, $category->getCategoryId()->getValue(), $category);
     }
 
-    public function update(Category $category)
+    /**
+     * @throws CategoryNotFound
+     * @throws CategoryAlreadyExists
+     */
+    public function update(Category $category): void
     {
-        // TODO: Implement update() method.
+        $category = $this->findById($category->getCategoryId());
+        $this->checkName($category->getCategoryName());
+        $this->memory[$category->getCategoryId()->getValue()] = $category;
     }
 
-    public function findById(CategoryId $categoryId)
+    /**
+     * @param CategoryId $categoryId
+     * @return Category
+     * @throws CategoryNotFound
+     */
+    public function findById(CategoryId $categoryId): Category
     {
-        // TODO: Implement findById() method.
+        if (isset($this->memory[$categoryId->getValue()])) {
+            return $this->memory[$categoryId->getValue()];
+        }
+        throw new CategoryNotFound();
     }
 
-    public function delete(CategoryId $categoryId)
+    /**
+     * @throws CategoryNotFound
+     */
+    public function delete(CategoryId $categoryId): void
     {
-        // TODO: Implement delete() method.
+        if (isset($this->memory[$categoryId->getValue()])) {
+            unset($this->memory[$categoryId->getValue()]);
+            return;
+        }
+        throw new CategoryNotFound();
     }
 
-    public function findAll()
+    /**
+     * @return array|Category
+     */
+    public function findAll(string $field, int $prev_offset, int $next_offset): array|Category
     {
         return $this->memory;
     }
 
+    /**
+     * @throws CategoryAlreadyExists
+     */
     private function checkName(CategoryName $name)
     {
         foreach ($this->memory as $key => $value) {
-
+            if ($name->getValue() === $value->getCategoryName()->getValue()) {
+                throw new CategoryAlreadyExists();
+            }
         }
     }
 

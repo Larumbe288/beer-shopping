@@ -8,7 +8,35 @@
       "name": "Álvaro Larumbe"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.united-internet.org:ngcs/core-lib.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.united-internet.org:ngcs/app-log.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.united-internet.org:ngcs/slim-lib.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.united-internet.org:ngcs/request-manager-lib.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.united-internet.org:ngcs/db-manager-lib.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.united-internet.org:ngcs/api-lib-gen.git"
+    }
+  ],
   "require": {
+    "ngcs/app-log": "^2",
+    "ngcs/slim-lib": "^7",
     "slim/slim": "*",
     "ext-json": "*",
     "ext-pdo": "*",

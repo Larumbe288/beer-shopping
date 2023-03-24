@@ -1,15 +1,21 @@
 <?php
-require "Connection.php";
-require "../Domain/Repositories/AutenticatorRepository.php";
-require "../Domain/ValueObject/UserEmail.php";
-require "../Domain/ValueObject/UserPassword.php";
-require "MySQLAutenticatorRepository.php";
+require __DIR__ . "/../../../../vendor/autoload.php";
 
-use BeerApi\Shopping\Users\Domain\ValueObject\UserEmail;
-use BeerApi\Shopping\Users\Domain\ValueObject\UserPassword;
-use BeerApi\Shopping\Users\Infrastucture\Connection;
-use BeerApi\Shopping\Users\Infrastucture\MySQLAutenticatorRepository;
+use BeerApi\Shopping\Categories\Application\CategoryCreator;
+use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryDescription;
+use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
+use BeerApi\Shopping\Categories\Infrastucture\Repositories\InMemoryCategoryRepository;
 
-$con = Connection::access();
-$repo = new MySQLAutenticatorRepository();
-var_dump($repo->adminLogin(new UserEmail("alvaro@larumbe.es"), new UserPassword("Alvaro1234")));
+$repo = new InMemoryCategoryRepository([]);
+$creator = new CategoryCreator($repo);
+$catName = CategoryName::randomName();
+$catDescription = CategoryDescription::randomDescription();
+
+try {
+    $catId = $creator($catName, $catDescription);
+    $memory = $repo->findAll();
+    foreach ($memory as $key => $value) {
+        echo $key . " " . $value->getCategoryName()->getValue();
+    }
+} catch (Exception $e) {
+}

@@ -9,6 +9,9 @@ use BeerApi\Shopping\Users\Domain\ValueObject\UserId;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserName;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserPassword;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserPhone;
+use BeerApi\Shopping\Users\Domain\ValueObject\UserRole;
+use Exception;
+use InvalidArgumentException;
 
 class User
 {
@@ -19,6 +22,7 @@ class User
     private UserAddress $userAddress;
     private UserBirthDate $userBirthDate;
     private UserPhone $userPhone;
+    private UserRole $userRole;
 
     public function __construct(
         UserId $userId,
@@ -27,7 +31,8 @@ class User
         UserPassword $userPassword,
         UserAddress $userAddress,
         UserBirthDate $userBirthDate,
-        UserPhone $userPhone
+        UserPhone $userPhone,
+        UserRole $userRole
     ) {
         $this->userId = $userId;
         $this->userName = $userName;
@@ -36,10 +41,126 @@ class User
         $this->userAddress = $userAddress;
         $this->userBirthDate = $userBirthDate;
         $this->userPhone = $userPhone;
+        $this->userRole = $userRole;
+    }
+
+    /**
+     * @return UserId
+     */
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @return UserName
+     */
+    public function getUserName(): UserName
+    {
+        return $this->userName;
+    }
+
+    /**
+     * @return UserEmail
+     */
+    public function getUserEmail(): UserEmail
+    {
+        return $this->userEmail;
+    }
+
+    /**
+     * @return UserPassword
+     */
+    public function getUserPassword(): UserPassword
+    {
+        return $this->userPassword;
+    }
+
+    /**
+     * @return UserAddress
+     */
+    public function getUserAddress(): UserAddress
+    {
+        return $this->userAddress;
+    }
+
+    /**
+     * @return UserBirthDate
+     */
+    public function getUserBirthDate(): UserBirthDate
+    {
+        return $this->userBirthDate;
+    }
+
+    /**
+     * @return UserPhone
+     */
+    public function getUserPhone(): UserPhone
+    {
+        return $this->userPhone;
+    }
+
+    /**
+     * @param UserName $name
+     * @param UserEmail $email
+     * @param UserPassword $password
+     * @param UserAddress $address
+     * @param UserBirthDate $birthDate
+     * @param UserPhone $phone
+     * @throws Exception
+     */
+    public static function create(
+        UserName $name,
+        UserEmail $email,
+        UserPassword $password,
+        UserAddress $address,
+        UserBirthDate $birthDate,
+        UserPhone $phone,
+        UserRole $role
+    ): self {
+        $id = UserId::generate();
+        return new User($id, $name, $email, $password, $address, $birthDate, $phone, $role);
+    }
+
+    /**
+     * @return UserRole
+     */
+    public function getUserRole(): UserRole
+    {
+        return $this->userRole;
     }
 
     public function autenticate()
     {
 
+    }
+
+    public function update(UserName $name, UserEmail $email, UserPassword $password, UserAddress $address, UserBirthDate $birthDate, UserPhone $phone, UserRole $role): self
+    {
+        $this->userName = $name;
+        $this->userEmail = $email;
+        $this->userPassword = $password;
+        $this->userAddress = $address;
+        $this->userBirthDate = $birthDate;
+        $this->userPhone = $phone;
+        $this->userRole = $role;
+        return $this;
+    }
+
+    public function delete(): void
+    {
+        if ($this->hasPendingProducts() || $this->isAdmin()) {
+            throw new InvalidArgumentException();
+        }
+    }
+
+    private function hasPendingProducts(): bool
+    {
+        return false;
+    }
+
+    private function isAdmin(): bool
+    {
+        return false;
     }
 }
