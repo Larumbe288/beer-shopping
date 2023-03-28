@@ -2,6 +2,7 @@
 
 namespace BeerApi\Shopping\Users\Domain\ValueObject;
 
+use Faker\Factory;
 use InvalidArgumentException;
 
 class UserAddress
@@ -14,6 +15,16 @@ class UserAddress
             throw new InvalidArgumentException();
         }
         $this->address = $address;
+    }
+
+    /**
+     * @return UserAddress
+     */
+    public static function randomAddress(): UserAddress
+    {
+        $faker = Factory::create();
+        $address = $faker->address();
+        return new UserAddress($address);
     }
 
     /**

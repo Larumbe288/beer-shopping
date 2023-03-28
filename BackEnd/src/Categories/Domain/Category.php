@@ -7,11 +7,12 @@ use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
 use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
 use Exception;
 use InvalidArgumentException;
+use JsonSerializable;
 
 /**
  *
  */
-class Category
+class Category implements JsonSerializable
 {
     private CategoryId $categoryId;
     private CategoryName $categoryName;
@@ -38,7 +39,10 @@ class Category
         return new Category(CategoryId::generate(), CategoryName::randomName(), CategoryDescription::randomDescription());
     }
 
-    public function getCategoryId()
+    /**
+     * @return CategoryId
+     */
+    public function getCategoryId(): CategoryId
     {
         return $this->categoryId;
     }
@@ -102,5 +106,28 @@ class Category
     private function isParentCategory(): bool
     {
         return false;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        if ($this->subId === null) {
+            $array = array(
+                "id" => $this->categoryId->getValue(),
+                "properties" => array(
+                    "name" => $this->categoryName->getValue(),
+                    "description" => $this->categoryDescription->getValue(),
+                )
+            );
+        } else {
+            $array = array(
+                "id" => $this->categoryId->getValue(),
+                "properties" => array(
+                    "name" => $this->categoryName->getValue(),
+                    "description" => $this->categoryDescription->getValue(),
+                    "subId" => $this->subId->getValue()
+                )
+            );
+        }
+        return $array;
     }
 }

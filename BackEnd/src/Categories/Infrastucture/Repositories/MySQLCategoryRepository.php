@@ -127,7 +127,7 @@ class MySQLCategoryRepository implements CategoryRepository
         $categoryArray = [];
         $db = Connection::access();
         try {
-            $sql = "select UUID,name,description,idCat from categories order by $field limit $prev_offset,$next_offset";
+            $sql = "select UUID,name,description,idCat from categories order by $field desc limit $prev_offset,$next_offset";
             $result = $db->query($sql);
             foreach ($result as $cat) {
                 if (is_null($cat['idCat'])) {

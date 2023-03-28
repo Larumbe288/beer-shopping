@@ -4,11 +4,12 @@ namespace BeerApi\Shopping\Users\Infrastucture;
 
 use BeerApi\Shopping\Users\Domain\Exceptions\UserAlreadyExists;
 use BeerApi\Shopping\Users\Domain\Exceptions\UserNotFound;
+use BeerApi\Shopping\Users\Domain\Repositories\UsersRepository;
 use BeerApi\Shopping\Users\Domain\User;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserEmail;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserId;
 
-class InMemoryUsersRepository implements \BeerApi\Shopping\Users\Domain\Repositories\UsersRepository
+class InMemoryUsersRepository implements UsersRepository
 {
     /** @var User[] */
     private array $memory;
@@ -20,10 +21,11 @@ class InMemoryUsersRepository implements \BeerApi\Shopping\Users\Domain\Reposito
 
     /**
      * @inheritDoc
+     * @throws UserAlreadyExists
      */
     public function insert(User $user): UserId
     {
-        $this->checkEmail();
+        $this->checkEmail($user->getUserEmail());
         $this->memory = $this->array_push_assoc($this->memory, $user->getUserId(), $user);
         return $user->getUserId();
     }
@@ -86,8 +88,8 @@ class InMemoryUsersRepository implements \BeerApi\Shopping\Users\Domain\Reposito
 
     private function checkEmail(UserEmail $userEmail)
     {
-        foreach ($this->memory as $key=>$value) {
-            if($userEmail->getValue() === $value->getUserEmail()->getValue()) {
+        foreach ($this->memory as $key => $value) {
+            if ($userEmail->getValue() === $value->getUserEmail()->getValue()) {
                 throw new UserAlreadyExists();
             }
         }

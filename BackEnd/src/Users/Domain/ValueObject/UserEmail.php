@@ -2,6 +2,7 @@
 
 namespace BeerApi\Shopping\Users\Domain\ValueObject;
 
+use Faker\Factory;
 use InvalidArgumentException;
 
 class UserEmail
@@ -15,6 +16,13 @@ class UserEmail
         } else {
             throw new InvalidArgumentException();
         }
+    }
+
+    public static function randomEmail(): UserEmail
+    {
+        $faker = Factory::create();
+        $email = $faker->email();
+        return new UserEmail($email);
     }
 
     /**

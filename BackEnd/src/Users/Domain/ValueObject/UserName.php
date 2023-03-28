@@ -2,6 +2,7 @@
 
 namespace BeerApi\Shopping\Users\Domain\ValueObject;
 
+use Faker\Factory;
 use InvalidArgumentException;
 
 class UserName
@@ -14,6 +15,13 @@ class UserName
             throw new InvalidArgumentException();
         }
         $this->name = $name;
+    }
+
+    public static function randomName(): UserName
+    {
+        $faker = Factory::create();
+        $name = $faker->name();
+        return new UserName($name);
     }
 
     /**

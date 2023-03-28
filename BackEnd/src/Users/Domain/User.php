@@ -12,8 +12,9 @@ use BeerApi\Shopping\Users\Domain\ValueObject\UserPhone;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserRole;
 use Exception;
 use InvalidArgumentException;
+use JsonSerializable;
 
-class User
+class User implements JsonSerializable
 {
     private UserId $userId;
     private UserName $userName;
@@ -122,6 +123,12 @@ class User
         return new User($id, $name, $email, $password, $address, $birthDate, $phone, $role);
     }
 
+    public static function randomUser(): User
+    {
+        return new User(UserId::generate(), UserName::randomName(), UserEmail::randomEmail(), UserPassword::randomPassword(), UserAddress::randomAddress(),
+            UserBirthDate::randomDate(), UserPhone::randomPhone(), UserRole::randomRole());
+    }
+
     /**
      * @return UserRole
      */
@@ -162,5 +169,24 @@ class User
     private function isAdmin(): bool
     {
         return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed
+    {
+        return array(
+            "id" => $this->getUserId()->getValue(),
+            "properties" => array(
+                "name" => $this->userName->getValue(),
+                "email" => $this->userEmail->getValue(),
+                "password" => $this->userPassword->getValue(),
+                "address" => $this->userAddress->getValue(),
+                "birth_date" => $this->userBirthDate->getValue(),
+                "phone" => $this->userPhone->getValue(),
+                "role" => $this->userRole->getValue()
+            )
+        );
     }
 }

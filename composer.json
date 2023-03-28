@@ -1,8 +1,8 @@
 {
-  "name": "ngcs/beer-shopping-api",
+  "name": "tfg/beer-shopping-api",
   "type": "project",
   "description": "beer-shopping-api service",
-  "license": "proprietary",
+  "license": "propietary",
   "authors": [
     {
       "name": "Álvaro Larumbe"
@@ -42,7 +42,10 @@
     "ext-pdo": "*",
     "phpmailer/phpmailer": "*",
     "fakerphp/faker": "*",
-    "php-di/php-di": "*"
+    "php-di/php-di": "*",
+    "slim/psr7": "*",
+    "guzzlehttp/psr7": "*",
+    "laminas/laminas-diactoros": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
