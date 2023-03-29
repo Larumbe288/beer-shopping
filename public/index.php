@@ -27,8 +27,27 @@ $app->get("/categories", function (Request $request, Response $response, array $
 });
 
 $app->get("/users", function (Request $request, Response $response, array $args) use ($container) {
+    $queryParams = $request->getQueryParams();
+    if (!isset($queryParams['start'])) {
+        $begin = 0;
+    } else {
+        $begin = (int)$queryParams['start'];
+    }
+    if (!isset($queryParams['end'])) {
+        $end = 10;
+    } else {
+        $end = (int)$queryParams['end'];
+    }
     $repo = $container->get(UsersRepository::class);
-    $response->getBody()->write(json_encode($repo->findAll('email', 32, 42)));
+    $response->getBody()->write(json_encode($repo->findAll('email', $begin, $end)));
+    return $response;
+});
+
+$app->get("/search", function (Request $request, Response $response, array $args) {
+    $queryParams = $request->getQueryParams();
+    $term = $queryParams['q'];
+    $term2 = $queryParams['s'];
+    $response->getBody()->write(json_encode(array($term => $term2)));
     return $response;
 });
 $app->run();
