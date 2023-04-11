@@ -22,24 +22,15 @@ $app = AppFactory::createFromContainer($container);
 
 $app->get("/categories", function (Request $request, Response $response, array $args) use ($container) {
     $repository = $container->get(CategoryRepository::class);
-    $response->getBody()->write(json_encode($repository->findAll('name', 19, 25)));
+    $categories = $repository->findAll('name', 0, 1000000000);
+    $response->getBody()->write(json_encode(array('items' => $categories)));
     return $response;
 });
 
 $app->get("/users", function (Request $request, Response $response, array $args) use ($container) {
-    $queryParams = $request->getQueryParams();
-    if (!isset($queryParams['start'])) {
-        $begin = 0;
-    } else {
-        $begin = (int)$queryParams['start'];
-    }
-    if (!isset($queryParams['end'])) {
-        $end = 10;
-    } else {
-        $end = (int)$queryParams['end'];
-    }
     $repo = $container->get(UsersRepository::class);
-    $response->getBody()->write(json_encode($repo->findAll('email', $begin, $end)));
+    $users = $repo->findAll('email', 0, 100000000000000000);
+    $response->getBody()->write(json_encode(array("items" => $users)));
     return $response;
 });
 

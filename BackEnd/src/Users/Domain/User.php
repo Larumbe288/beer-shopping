@@ -123,6 +123,9 @@ class User implements JsonSerializable
         return new User($id, $name, $email, $password, $address, $birthDate, $phone, $role);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function randomUser(): User
     {
         return new User(UserId::generate(), UserName::randomName(), UserEmail::randomEmail(), UserPassword::randomPassword(), UserAddress::randomAddress(),

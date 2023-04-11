@@ -36,7 +36,7 @@ class UserCreator
         UserRole $role
     ): UserId {
         $user = User::create($name, $email, $password, $address, $birthDate, $phone, $role);
-        $this->usersRepository->create($user);
+        $this->usersRepository->insert($user);
         return $user->getUserId();
     }
 }

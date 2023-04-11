@@ -16,7 +16,7 @@ class UserUpdater
 
     public function __invoke(User $user): void
     {
-        $user = $this->usersRepository->find($user->getUserId());
+        $user2 = $this->usersRepository->find($user->getUserId());
         $name = $user->getUserName();
         $email = $user->getUserEmail();
         $password = $user->getUserPassword();

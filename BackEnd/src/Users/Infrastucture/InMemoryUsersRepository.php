@@ -9,6 +9,9 @@ use BeerApi\Shopping\Users\Domain\User;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserEmail;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserId;
 
+/**
+ *
+ */
 class InMemoryUsersRepository implements UsersRepository
 {
     /** @var User[] */
@@ -45,12 +48,14 @@ class InMemoryUsersRepository implements UsersRepository
     /**
      * @inheritDoc
      * @throws UserNotFound
+     * @throws UserAlreadyExists
      */
     public function update(User $user): void
     {
         if (!isset($this->memory[$user->getUserId()->getValue()])) {
             throw new UserNotFound();
         }
+        $this->checkEmail($user->getUserEmail());
         $this->memory[$user->getUserId()->getValue()] = $user;
     }
 
