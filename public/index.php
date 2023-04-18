@@ -22,7 +22,18 @@ $app = AppFactory::createFromContainer($container);
 
 $app->get("/categories", function (Request $request, Response $response, array $args) use ($container) {
     $repository = $container->get(CategoryRepository::class);
-    $categories = $repository->findAll('name', 0, 1000000000);
+    $queryParams = $request->getQueryParams();
+    if (isset($queryParams['begin'])) {
+        $begin = (int)$queryParams['begin'];
+    } else {
+        $begin = 0;
+    }
+    if (isset($queryParams['end'])) {
+        $end = (int)$queryParams['end'];
+    } else {
+        $end = 10;
+    }
+    $categories = $repository->findAll('name', $begin, $end);
     $response->getBody()->write(json_encode(array('items' => $categories)));
     return $response;
 });
