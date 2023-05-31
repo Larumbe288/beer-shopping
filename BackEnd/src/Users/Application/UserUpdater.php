@@ -5,6 +5,10 @@ namespace BeerApi\Shopping\Users\Application;
 use BeerApi\Shopping\Users\Domain\Repositories\UsersRepository;
 use BeerApi\Shopping\Users\Domain\User;
 
+/**
+ * Class UserUpdater
+ * @package BeerApi\Shopping\Users\Application
+ */
 class UserUpdater
 {
     private UsersRepository $usersRepository;

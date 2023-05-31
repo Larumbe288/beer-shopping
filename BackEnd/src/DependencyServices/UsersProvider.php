@@ -6,8 +6,10 @@ use BeerApi\Shopping\Users\Application\UserCreator;
 use BeerApi\Shopping\Users\Application\UserDeleter;
 use BeerApi\Shopping\Users\Application\UserFinder;
 use BeerApi\Shopping\Users\Application\UserUpdater;
+use BeerApi\Shopping\Users\Domain\Repositories\AutenticatorRepository;
 use BeerApi\Shopping\Users\Domain\Repositories\UsersRepository;
-use BeerApi\Shopping\Users\Infrastucture\MySQLUsersRepository;
+use BeerApi\Shopping\Users\Infrastructure\MySQLAutenticatorRepository;
+use BeerApi\Shopping\Users\Infrastructure\MySQLUsersRepository;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -30,6 +32,7 @@ class UsersProvider
      */
     public function register(): Container
     {
+        $this->container->set(AutenticatorRepository::class, new MySQLAutenticatorRepository());
         $this->container->set(UsersRepository::class, new MySQLUsersRepository());
         $this->container->set(UserCreator::class, new UserCreator($this->container->get(UsersRepository::class)));
         $this->container->set(UserFinder::class, new UserFinder($this->container->get(UsersRepository::class)));

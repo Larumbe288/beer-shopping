@@ -6,6 +6,10 @@ use BeerApi\Shopping\Users\Domain\Repositories\UsersRepository;
 use BeerApi\Shopping\Users\Domain\User;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserId;
 
+/**
+ * Class UserFinder
+ * @package BeerApi\Shopping\Users\Application
+ */
 class UserFinder
 {
     private UsersRepository $usersRepository;

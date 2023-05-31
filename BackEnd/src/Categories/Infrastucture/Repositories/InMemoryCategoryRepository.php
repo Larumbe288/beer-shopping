@@ -6,8 +6,8 @@ use BeerApi\Shopping\Categories\Domain\Category;
 use BeerApi\Shopping\Categories\Domain\Exceptions\CategoryAlreadyExists;
 use BeerApi\Shopping\Categories\Domain\Exceptions\CategoryNotFound;
 use BeerApi\Shopping\Categories\Domain\Repositories\CategoryRepository;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryId;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryName;
 
 /**
  *

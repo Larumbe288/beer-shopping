@@ -5,6 +5,10 @@ namespace BeerApi\Shopping\Users\Domain\ValueObject;
 use Faker\Factory;
 use InvalidArgumentException;
 
+/**
+ * Class UserName
+ * @package BeerApi\Shopping\Users\Domain\ValueObject
+ */
 class UserName
 {
     private string $name;

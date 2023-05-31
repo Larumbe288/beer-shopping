@@ -3,7 +3,7 @@
 namespace BeerApi\Shopping\Categories\Domain\Repositories;
 
 use BeerApi\Shopping\Categories\Domain\Category;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryId;
 
 /**
  *

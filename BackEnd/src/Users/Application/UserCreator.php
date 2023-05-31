@@ -14,6 +14,10 @@ use BeerApi\Shopping\Users\Domain\ValueObject\UserPhone;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserRole;
 use Exception;
 
+/**
+ * Class UserCreator
+ * @package BeerApi\Shopping\Users\Application
+ */
 class UserCreator
 {
     private UsersRepository $usersRepository;

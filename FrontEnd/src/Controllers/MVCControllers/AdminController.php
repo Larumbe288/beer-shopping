@@ -2,12 +2,12 @@
 
 namespace BeerMVC\Shopping\Controllers\MVCControllers;
 
+use BeerApi\Shopping\Connection\Doctrine;
 use BeerApi\Shopping\Users\Application\AdminAutenticator;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserEmail;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserPassword;
-use BeerApi\Shopping\Users\Infrastucture\Connection;
-use BeerApi\Shopping\Users\Infrastucture\Mailer;
-use BeerApi\Shopping\Users\Infrastucture\MySQLAutenticatorRepository;
+use BeerApi\Shopping\Users\Infrastructure\Mailer;
+use BeerApi\Shopping\Users\Infrastructure\MySQLAutenticatorRepository;
 use Exception;
 
 class AdminController
@@ -57,8 +57,8 @@ class AdminController
     public
     function testDatabase()
     {
-        $con = Connection::access();
-        var_dump($con);
+        $con = Doctrine::access();
+        var_dump($con->getConnection());
     }
 
 

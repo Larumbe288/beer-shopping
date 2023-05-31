@@ -5,6 +5,10 @@ namespace BeerApi\Shopping\Categories\Application;
 use BeerApi\Shopping\Categories\Domain\Category;
 use BeerApi\Shopping\Categories\Domain\Repositories\CategoryRepository;
 
+/**
+ * Class CategoryUpdater
+ * @package BeerApi\Shopping\Categories\Application
+ */
 class CategoryUpdater
 {
     private CategoryRepository $categoryRepository;

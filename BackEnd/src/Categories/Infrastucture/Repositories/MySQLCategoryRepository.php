@@ -4,10 +4,11 @@ namespace BeerApi\Shopping\Categories\Infrastucture\Repositories;
 
 use BeerApi\Shopping\Categories\Domain\Category;
 use BeerApi\Shopping\Categories\Domain\Repositories\CategoryRepository;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryDescription;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
-use BeerApi\Shopping\Connection\Connection;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryDescription;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryId;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryName;
+use BeerApi\Shopping\Connection\Doctrine;
+use Doctrine\DBAL\Exception;
 use PDOException;
 
 /**
@@ -16,57 +17,60 @@ use PDOException;
 class MySQLCategoryRepository implements CategoryRepository
 {
 
-    public function insert(Category $category)
+    /**
+     * @throws Exception
+     */
+    public function insert(Category $category): void
     {
-        $db = Connection::access();
-        try {
-            $id = $category->getCategoryId()->getValue();
-            $name = $category->getCategoryName()->getValue();
-            $description = $category->getCategoryDescription()->getValue();
-            if (is_null($category->getSubId())) {
-                $sql = "insert into categories(UUID,name,description) VALUES ('$id','$name','$description')";
-            } else {
-                $subId = $category->getSubId()->getValue();
-                $sql = "insert into categories(UUID,name,description,idCat) VALUES ('$id','$name','$description', $subId)";
-            }
-            $result = $db->query($sql);
-            if (!$result) {
-                echo $db->errorInfo();
-            }
+        $db = Doctrine::access();
+        if (is_null($category->getSubId())) {
 
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+            $db->insert('categories')
+                ->values(array(
+                    "UUID" => ':uuid',
+                    'name' => ':name',
+                    'description' => ':description'
+                ))
+                ->setParameter(':uuid', $category->getCategoryId()->getValue())
+                ->setParameter(':name', $category->getCategoryName()->getValue())
+                ->setParameter(':description', $category->getCategoryDescription()->getValue())
+                ->execute();
+        } else {
+            $db->insert('categories')
+                ->values(array(
+                    "UUID" => ':uuid',
+                    'name' => ':name',
+                    'description' => ':description',
+                    'idCat' => ':idCat'
+                ))
+                ->setParameter(':uuid', $category->getCategoryId()->getValue())
+                ->setParameter(':name', $category->getCategoryName()->getValue())
+                ->setParameter(':description', $category->getCategoryDescription()->getValue())
+                ->setParameter(':idCat', $category->getSubId()->getValue())
+                ->execute();
         }
-        finally {
-            $db = null;
-        }
+        $db = null;
+
     }
 
+    /**
+     * @throws Exception
+     */
     public function update(Category $category)
     {
-        $db = Connection::access();
-        try {
-            $category = $this->findById($category->getCategoryId());
-            $id = $category->getCategoryId()->getValue();
-            $name = $category->getCategoryName()->getValue();
-            $description = $category->getCategoryDescription()->getValue();
-            if (is_null($category->getSubId())) {
-                $sql = "update categories set name='$name',description='$description' where UUID='$id'";
-
-            } else {
-                $subId = $category->getSubId()->getValue();
-                $sql = "update categories set name='$name',description='$description',idCat='$subId' where UUID='$id'";
-            }
-            $result = $db->query($sql);
-            if (!$result) {
-                echo "Error: " . $db->errorInfo();
-            }
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+        $currentCategory = $this->findById($category->getCategoryId());
+        $db = Doctrine::access();
+        $db->update('categories')
+            ->where('UUID = :id')->setParameter(':id', $category->getCategoryId()->getValue())
+            ->set('name', ':name')->setParameter(':name', $category->getCategoryName()->getValue())
+            ->set('description', ':description')->setParameter(':description', $category->getCategoryDescription()->getValue());
+        if (!is_null($category->getSubId())) {
+            $db->set('idCat', ':idCat')->setParameter(':idCat', $category->getSubId());
+        } else {
+            $db->set('idCat', 'null');
         }
-        finally {
-            $db = null;
-        }
+        $db->execute();
+        $db = null;
     }
 
     /**
@@ -75,75 +79,72 @@ class MySQLCategoryRepository implements CategoryRepository
      */
     public function findById(CategoryId $categoryId): Category
     {
-        $db = Connection::access();
-        try {
-            $id = $categoryId->getValue();
-            $sql = "select UUID,name,description,idCat from categories where UUID='$id'";
-            $result = $db->query($sql);
-            $cat = $result->fetch();
-            if ($cat) {
-                if (is_null($cat['idCat'])) {
-                    $category = new Category(new CategoryId($cat['UUID']), new CategoryName($cat['name']), new CategoryDescription($cat['description']));
-                } else {
-                    $category = new Category(new CategoryId($cat['UUID']), new CategoryName($cat['name']), new CategoryDescription($cat['description']),
-                        new CategoryId($cat['idCat']));
-                }
-                return $category;
-            }
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-        finally {
-            $db = null;
-        }
+        $db = Doctrine::access();
+        $result = $db->select('*')->from('categories')->where('UUID = :id')->setParameter(':id', $categoryId->getValue())
+            ->execute()->fetchAllAssociative();
+        $db = null;
+        return $this->mapToCategory($result)[0];
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(CategoryId $categoryId)
     {
-        $db = Connection::access();
-        try {
-            $id = $categoryId->getValue();
-            $sql = "delete from categories where UUID='$id'";
-            $result = $db->query($sql);
-            if (!$result) {
-                echo "Error: " . $db->errorInfo();
-            }
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-        finally {
-            $db = null;
-        }
+        $db = Doctrine::access();
+        $id = $categoryId->getValue();
+        $db->delete('categories')
+            ->where('UUID = :id')->setParameter(':id', $id)->execute();
+        $db = null;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getNumberCategories(): int
+    {
+        $db = Doctrine::access();
+        $result = $db->select('count(UUID) as number')->from('categories')->execute()->fetchAllAssociative();
+        return (int)$result[0]['number'];
     }
 
     /**
      * @param string $field
      * @param int $prev_offset
      * @param int $next_offset
-     * @return array|void
+     * @return Category[]
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public function findAll(string $field, int $prev_offset, int $next_offset)
+    public function findAll(string $field, int $prev_offset, int $next_offset): array
     {
-        $categoryArray = [];
-        $db = Connection::access();
-        try {
-            $sql = "select UUID,name,description,idCat from categories order by $field desc limit $prev_offset,$next_offset";
-            $result = $db->query($sql);
-            foreach ($result as $cat) {
-                if (is_null($cat['idCat'])) {
-                    $category = new Category(new CategoryId($cat['UUID']), new CategoryName($cat['name']), new CategoryDescription($cat['description']));
-                } else {
-                    $category = new Category(new CategoryId($cat['UUID']), new CategoryName($cat['name']), new CategoryDescription($cat['description']),
-                        new CategoryId($cat['idCat']));
-                }
-                array_push($categoryArray, $category);
+        $db = Doctrine::access();
+        $db->select('*')->from('categories');
+        $db->orderBy(":field", 'DESC')
+            ->setParameter(':field', $field)
+            ->setFirstResult($prev_offset)
+            ->setMaxResults($next_offset);
+        $result = $db->execute()->fetchAllAssociative();
+        $db = null;
+        return $this->mapToCategory($result);
+    }
+
+    /**
+     * @param array $result
+     * @return Category[]
+     */
+    private function mapToCategory(array $result): array
+    {
+        $arrayCategories = [];
+        for ($i = 0; $i < count($result); $i++) {
+            if (is_null($result[0]['idCat'])) {
+                $arrayCategories[] = new Category(new CategoryId($result[$i]['UUID']), new CategoryName($result[$i]['name']), new CategoryDescription($result[$i]['description']),
+                    null);
+            } else {
+                $arrayCategories[] = new Category(new CategoryId($result[$i]['UUID']), new CategoryName($result[$i]['name']), new CategoryDescription($result[$i]['description']),
+                    new CategoryId($result[$i]['idCat']));
             }
-            return $categoryArray;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
         }
-        finally {
-            $db = null;
-        }
+        return $arrayCategories;
     }
 }

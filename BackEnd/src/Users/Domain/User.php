@@ -12,8 +12,14 @@ use BeerApi\Shopping\Users\Domain\ValueObject\UserPhone;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserRole;
 use Exception;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 
+/**
+ * Class User
+ * @package BeerApi\Shopping\Users\Domain
+ */
 class User implements JsonSerializable
 {
     private UserId $userId;
@@ -26,15 +32,16 @@ class User implements JsonSerializable
     private UserRole $userRole;
 
     public function __construct(
-        UserId $userId,
-        UserName $userName,
-        UserEmail $userEmail,
-        UserPassword $userPassword,
-        UserAddress $userAddress,
+        UserId        $userId,
+        UserName      $userName,
+        UserEmail     $userEmail,
+        UserPassword  $userPassword,
+        UserAddress   $userAddress,
         UserBirthDate $userBirthDate,
-        UserPhone $userPhone,
-        UserRole $userRole
-    ) {
+        UserPhone     $userPhone,
+        UserRole      $userRole
+    )
+    {
         $this->userId = $userId;
         $this->userName = $userName;
         $this->userEmail = $userEmail;
@@ -111,14 +118,15 @@ class User implements JsonSerializable
      * @throws Exception
      */
     public static function create(
-        UserName $name,
-        UserEmail $email,
-        UserPassword $password,
-        UserAddress $address,
+        UserName      $name,
+        UserEmail     $email,
+        UserPassword  $password,
+        UserAddress   $address,
         UserBirthDate $birthDate,
-        UserPhone $phone,
-        UserRole $role
-    ): self {
+        UserPhone     $phone,
+        UserRole      $role
+    ): self
+    {
         $id = UserId::generate();
         return new User($id, $name, $email, $password, $address, $birthDate, $phone, $role);
     }
@@ -175,9 +183,9 @@ class User implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function jsonSerialize(): mixed
+    #[Pure] #[ArrayShape(["id" => "string", "properties" => "array"])] public function jsonSerialize(): array
     {
         return array(
             "id" => $this->getUserId()->getValue(),

@@ -4,11 +4,15 @@ namespace BeerApi\Shopping\Categories\Application;
 
 use BeerApi\Shopping\Categories\Domain\Category;
 use BeerApi\Shopping\Categories\Domain\Repositories\CategoryRepository;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryDescription;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryDescription;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryId;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryName;
 use Exception;
 
+/**
+ * Class CategoryCreator
+ * @package BeerApi\Shopping\Categories\Application
+ */
 class CategoryCreator
 {
     private CategoryRepository $repository;

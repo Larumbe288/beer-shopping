@@ -2,11 +2,13 @@
 
 namespace BeerApi\Shopping\Categories\Domain;
 
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryDescription;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryName;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryDescription;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryId;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryName;
 use Exception;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 
 /**
@@ -108,7 +110,7 @@ class Category implements JsonSerializable
         return false;
     }
 
-    public function jsonSerialize(): mixed
+    #[Pure] #[ArrayShape(["id" => "string", "properties" => "array"])] public function jsonSerialize(): array
     {
         if ($this->subId === null) {
             $array = array(

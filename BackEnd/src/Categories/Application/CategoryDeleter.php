@@ -3,7 +3,7 @@
 namespace BeerApi\Shopping\Categories\Application;
 
 use BeerApi\Shopping\Categories\Domain\Repositories\CategoryRepository;
-use BeerApi\Shopping\Categories\Domain\ValueObjects\CategoryId;
+use BeerApi\Shopping\Categories\Domain\ValueObject\CategoryId;
 
 class CategoryDeleter
 {
@@ -16,7 +16,6 @@ class CategoryDeleter
 
     public function __invoke(CategoryId $categoryId)
     {
-        $category = $this->categoryRepository->findById($categoryId);
-        $category->delete();
+        $this->categoryRepository->delete($categoryId);
     }
 }

@@ -5,6 +5,7 @@ namespace BeerApi\Shopping\Users\Domain\Repositories;
 use BeerApi\Shopping\Categories\Domain\Category;
 use BeerApi\Shopping\Users\Domain\User;
 use BeerApi\Shopping\Users\Domain\ValueObject\UserId;
+use BeerApi\Shopping\Users\Domain\ValueObject\UserPassword;
 
 /**
  * @author Álvaro Larumbe
@@ -45,4 +46,6 @@ interface UsersRepository
      * @return Category[]
      */
     public function findAll(string $field, int $prev_offset, int $next_offset): array;
+
+    public function updatePassword(UserId $userId, UserPassword $password): void;
 }

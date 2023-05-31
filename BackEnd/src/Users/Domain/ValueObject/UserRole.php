@@ -4,6 +4,10 @@ namespace BeerApi\Shopping\Users\Domain\ValueObject;
 
 use InvalidArgumentException;
 
+/**
+ * Class UserRole
+ * @package BeerApi\Shopping\Users\Domain\ValueObject
+ */
 class UserRole
 {
     private string $role;
